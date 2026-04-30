@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+int utf8_char_length(uint8_t lead);
 char** utf8_decode(char* str);
 
 
