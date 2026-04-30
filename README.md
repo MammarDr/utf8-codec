@@ -29,7 +29,7 @@ U+1F609
 ## Build
 
 ```
-gcc src/*.c -Iinclude -o utf8
+gcc [version]/src/*.c -Iinclude -o utf8
 ```
 
 ## Run
