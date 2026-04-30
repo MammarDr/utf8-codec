@@ -13,7 +13,7 @@ static char* bainary_to_hex(char byte) {
     return hex;
 }
 
-static int utf8_char_length(uint8_t lead) {
+int utf8_char_length(uint8_t lead) {
     if ((lead & 0x80) == 0x00) return 1;
     else if ((lead & 0xE0) == 0xC0) return 2;
     else if ((lead & 0xF0) == 0xE0) return 3;
