@@ -1,8 +1,10 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "read_line.h"
-#include "utf8.h"
+#include <string.h>
+#include <ctype.h>
+#include "../include/read_line.h"
+#include "../include/utf8.h"
 
 
 static void trim(char* s) {
@@ -78,17 +80,16 @@ int main()
             char** tokens = malloc(sizeof(char*) * (strlen(choice_str) / 2 + 2));
             size_t count = 0;
 
-            char* context = NULL; 
-
-
-            char* token = strtok_s(choice_str, ",", &context);
+            char* str_copy = strdup(choice_str);
+            char* token = strtok(str_copy, ",");
             while (token) {
                 trim(token);
-                tokens[count] = _strdup(token); 
+                tokens[count] = strdup(token); 
                 count++;
-                token = strtok_s(NULL, ",", &context);
+                token = strtok(NULL, ",");
             }
             tokens[count] = NULL;
+            free(str_copy);
             uint8_t* result = utf8_encode(tokens);
             if (result) {
                 printf("Encoded Hex Bytes: ");
