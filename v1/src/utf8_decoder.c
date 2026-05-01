@@ -28,17 +28,18 @@ static uint8_t extract_utf8_bits(uint8_t byte, short usable_bits, short prev_byt
 }
 
 static char* utf8_to_unicode(char* sequence, int start) {
-    short bytes_count = utf8_char_length(sequence[start]);
+    short bytes_count = utf8_char_length((uint8_t)sequence[start]);
     if (bytes_count == -1) return NULL;
 
-    char* unicode = (char*)malloc(sizeof(char) * 6);
+    char* unicode = (char*)malloc(sizeof(char) * 7);
     if (unicode == NULL) return NULL;
-    for (int i = 0; i < 5; i++) unicode[i] = '0';
+    for (int i = 0; i < 6; i++) unicode[i] = '0';
 
-    int p = 4;
+    int p = 5;
 
     int8_t prev = -1;
     short prev_byte_len = 0;
+
     for (int i = start + bytes_count - 1; i >= start && sequence[i] != '\0'; i--) {
         if (prev == -1) {
             uint8_t trim_byte = (sequence[i] & (0xFF >> 2));
@@ -66,7 +67,7 @@ static char* utf8_to_unicode(char* sequence, int start) {
         }
     }
 
-    unicode[5] = '\0';
+    unicode[6] = '\0';
 
     return unicode;
 }
@@ -92,16 +93,14 @@ char** utf8_decode(char* str) {
     size_t count = 0;
     for (int i = 0; str[i] != '\0'; i++) {
 
-        if ((str[i] & 0x80) == 0x00) {
-            // printf("ascii value\n");
+        if ((str[i] & 0x80) == 0x00) { // ASCII
             char* hexa = bainary_to_hex(str[i]);
-            unicode_list[count] = (char*)malloc(sizeof(char) * 6);
+            unicode_list[count] = (char*)malloc(sizeof(char) * 7);
             if (unicode_list[count] == NULL) return NULL;
-            snprintf(unicode_list[count], 6, "000%s", hexa);
+            snprintf(unicode_list[count], 7, "0000%s", hexa);
 
         }
         else {
-            // printf("unicode value");
             size_t temp = 0;
 
             int lead_bit = i;
@@ -115,9 +114,7 @@ char** utf8_decode(char* str) {
             i += bytes_count - 1;
             unicode_list[count] = unicode;
         }
-        // printf("%s\n", unicode_list[count]);
         count++;
-        printf(" ");
     }
 
     unicode_list[length] = NULL;
