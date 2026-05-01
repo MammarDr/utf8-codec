@@ -1,4 +1,9 @@
-#include "utf8.h";
+#include "../include/utf8.h"
+#include <string.h>
+#include <stdint.h>
+
+// Forward declaration
+static int bytes_count_from_unicode(char* unicode);
 
 static int hex_value(char c) {
 	if (c >= '0' && c <= '9') return c - '0';
@@ -13,6 +18,17 @@ static uint8_t get_byte_from_pair(char* unicode, size_t index) {
 	if (index == 2) return (hex_value(unicode[0]) << 4) | hex_value(unicode[1]);
 	return -1;
 }
+
+static int bytes_count_from_unicode(char* unicode) {
+	int size = strlen(unicode);
+	if (size > 6) return -1;
+	if (size > 4 && (unicode[1] != '0' || unicode[0] != '0')) return 4;
+	if (size > 2 && (unicode[3] >= '8' || unicode[2] != '0')) return 3;
+	if (size > 1 && (unicode[4] >= '8' || unicode[3] != '0')) return 2;
+	return 1;
+
+}
+
 
 static uint8_t* hexa_to_utf8(char* unicode, int* leng) {
 
@@ -47,20 +63,11 @@ static uint8_t* hexa_to_utf8(char* unicode, int* leng) {
 		*leng = 3;
 	}
 
-	utf8[bytes_count] = ((void*)0);
+	utf8[bytes_count] = '\0';
 	
 	return utf8;
 }
 
-static int bytes_count_from_unicode(char* unicode) {
-	int size = strlen(unicode);
-	if (size > 6) return -1;
-	if (size > 4 && (unicode[1] != '0' || unicode[0] != '0')) return 4;
-	if (size > 2 && (unicode[3] >= '8' || unicode[2] != '0')) return 3;
-	if (size > 1 && (unicode[4] >= '8' || unicode[3] != '0')) return 2;
-	return 1;
-
-}
 
 static char* normalize_unicode(char* unicode) {
 	int size = strlen(unicode);
