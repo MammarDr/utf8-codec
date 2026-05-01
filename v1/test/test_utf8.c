@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
-#include "utf8.h"
+#include "../include/utf8.h"
 
 
 void test_utf8_char_length(void)
