@@ -28,7 +28,7 @@ static uint8_t* hexa_to_utf8(char* unicode, int* leng) {
 	
 	if (bytes_count == 2) {
 		utf8[1] = 0x80 | (get_byte_from_pair(unicode, 0) & (0xFF >> 2));
-		utf8[0] = 0xC0 | ((get_byte_from_pair(unicode, 0) & (0xFF << 6)) >> 6) | ((get_byte_from_pair(unicode, 1) & (0xFF >> 6)) << 2);
+		utf8[0] = 0xC0 | ((get_byte_from_pair(unicode, 0) & (0xFF << 6)) >> 6) | ((get_byte_from_pair(unicode, 1) & (0xFF >> 4)) << 2);
 		*leng = get_byte_from_pair(unicode, 1) == 0 ? 1 : 2;
 	}
 
