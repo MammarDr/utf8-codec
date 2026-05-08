@@ -2,9 +2,6 @@
 #include <string.h>
 #include <stdint.h>
 
-// Forward declaration
-static int bytes_count_from_unicode(char* unicode);
-
 static int hex_value(char c) {
 	if (c >= '0' && c <= '9') return c - '0';
 	if (c >= 'A' && c <= 'F') return 10 + (c - 'A');
